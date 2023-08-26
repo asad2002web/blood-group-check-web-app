@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import './Layout.css'
+import { MdBloodtype } from "react-icons/md";
+import loading from '../../assets/submitLoading.svg'
+import Swal from 'sweetalert2';
 const Layout = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const [antigenA, setAntigenA] = useState(false);
     const [antigenB, setAntigenB] = useState(false);
     const [rhFactor, setRhFactor] = useState(false);
@@ -8,26 +12,46 @@ const Layout = () => {
 
     const calculateResult = () => {
         let bloodType = '';
+        // Loading start
+        setIsLoading(true);
 
-        if (antigenA && antigenB && rhFactor) {
-            bloodType = 'AB+';
-        } else if (antigenA && antigenB && !rhFactor) {
-            bloodType = 'AB-';
-        } else if (!antigenA && antigenB && rhFactor) {
-            bloodType = 'B+';
-        } else if (!antigenA && antigenB && !rhFactor) {
-            bloodType = 'B-';
-        } else if (antigenA && !antigenB && rhFactor) {
-            bloodType = 'A+';
-        } else if (antigenA && !antigenB && !rhFactor) {
-            bloodType = 'A-';
-        } else if (!antigenA && !antigenB && rhFactor) {
-            bloodType = 'O+';
-        } else if (!antigenA && !antigenB && !rhFactor) {
-            bloodType = 'O-';
-        }
+        setTimeout(() => {
 
-        setResult(bloodType);
+            if (antigenA && antigenB && rhFactor) {
+                bloodType = 'AB+ (Posative)';
+            } else if (antigenA && antigenB && !rhFactor) {
+                bloodType = 'AB- (Negative)';
+            } else if (!antigenA && antigenB && rhFactor) {
+                bloodType = 'B+ (Posative)';
+            } else if (!antigenA && antigenB && !rhFactor) {
+                bloodType = 'B- (Negative)';
+            } else if (antigenA && !antigenB && rhFactor) {
+                bloodType = 'A+ (Posative)';
+            } else if (antigenA && !antigenB && !rhFactor) {
+                bloodType = 'A- (Negative)';
+            } else if (!antigenA && !antigenB && rhFactor) {
+                bloodType = 'O+ (Posative)';
+            } else if (!antigenA && !antigenB && !rhFactor) {
+                bloodType = 'O- (Negative)';
+            }
+
+            setResult(bloodType);
+            // Loading end
+            setIsLoading(false);
+            // Display SweetAlert2 with the result
+            Swal.fire({
+                title: `আপনার রক্তের গ্রুপ পরীক্ষা করা হয়েছে <br/> ${bloodType}`,
+                confirmButtonText: "ধন্যবাদ",
+                color: '#e90b0b',
+                customClass: {
+                    title: 'swal2-title-custom-blood',
+                    confirmButton: 'swal2-confirm-button-custom'
+                  },
+                  buttonsStyling: false
+
+            });
+        }, 1000);
+        resetForm()
     };
 
     const resetForm = () => {
@@ -39,7 +63,9 @@ const Layout = () => {
 
     return (
         <div className="BloodCheck">
-            <h1>রক্তের গ্রুপ পরীক্ষা করুন</h1>
+            <h1 className='heading'>রক্তের গ্রুপ পরীক্ষা করুন
+                <MdBloodtype className='ms-1' />
+            </h1>
             <div className='card-container'>
                 <label for="antigenA">
                     যদি এন্টিজেন A মিশানো রক্ত ভেঙ্গে  যায়, <br />
@@ -61,9 +87,14 @@ const Layout = () => {
                 </label>
                 <input id="rhFactor" type="checkbox" checked={rhFactor} onChange={() => setRhFactor(!rhFactor)} />
             </div>
-            <button onClick={calculateResult}>পরীক্ষা করুন</button>
-            <button onClick={resetForm}>পুনরায়</button>
-            {result && <div className="Result">Result: {result}</div>}
+            <div className="space"></div>
+            {
+                isLoading ? <button onClick={calculateResult}>
+                    <img src={loading} alt="loading" className='submit-load' />
+                </button> : <button onClick={calculateResult}>পরীক্ষা করুন</button>
+            }
+            {/* <button onClick={resetForm}>পুনরায়</button> */}
+            {result && <div className="Result">আপনার রক্তের গ্রুপ <span>{result}</span></div>}
         </div>
     )
 }
