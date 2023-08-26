@@ -1,38 +1,68 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Layout.css'
-import CardAns from '../CardAns'
-import { Button } from 'react-bootstrap'
 const Layout = () => {
+    const [antigenA, setAntigenA] = useState(false);
+    const [antigenB, setAntigenB] = useState(false);
+    const [rhFactor, setRhFactor] = useState(false);
+    const [result, setResult] = useState('');
+  
+    const calculateResult = () => {
+      let bloodType = '';
+  
+      if (antigenA && antigenB && rhFactor) {
+        bloodType = 'AB+';
+      } else if (antigenA && antigenB && !rhFactor) {
+        bloodType = 'AB-';
+      } else if (!antigenA && antigenB && rhFactor) {
+        bloodType = 'B+';
+      } else if (!antigenA && antigenB && !rhFactor) {
+        bloodType = 'B-';
+      } else if (antigenA && !antigenB && rhFactor) {
+        bloodType = 'A+';
+      } else if (antigenA && !antigenB && !rhFactor) {
+        bloodType = 'A-';
+      } else if (!antigenA && !antigenB && rhFactor) {
+        bloodType = 'O+';
+      } else if (!antigenA && !antigenB && !rhFactor) {
+        bloodType = 'O-';
+      }
+  
+      setResult(bloodType);
+    };
+  
+    const resetForm = () => {
+      setAntigenA(false);
+      setAntigenB(false);
+      setRhFactor(false);
+      setResult('');
+    };
+
     return (
-        <div className='main-layout bg-dark'>
-            <h2 className='text-center text-white mb-3'>Check Your Blood Group</h2>
-            {
-                antigen.map((item, i) => <CardAns key={i} antigen={item} />)
-            }
-            <div className='mt-3 d-flex gap-5'>
-            <Button variant="danger">Check Blood</Button>
-      <Button variant="info">Reset</Button>
-            </div>
-            <div>
-                <h1 className='text-warning fs-3'>Your Blood Group Result : {"A+"}</h1>
-            </div>
-        </div>
+        <div className="BloodCheck">
+      <h1>Blood Type Checker</h1>
+      <div>
+        <label>
+          Antigen A:
+          <input type="checkbox" checked={antigenA} onChange={() => setAntigenA(!antigenA)} />
+        </label>
+      </div>
+      <div>
+        <label>
+          Antigen B:
+          <input type="checkbox" checked={antigenB} onChange={() => setAntigenB(!antigenB)} />
+        </label>
+      </div>
+      <div>
+        <label>
+          Rh Factor:
+          <input type="checkbox" checked={rhFactor} onChange={() => setRhFactor(!rhFactor)} />
+        </label>
+      </div>
+      <button onClick={calculateResult}>Result</button>
+      <button onClick={resetForm}>Reset</button>
+      {result && <div className="Result">Result: {result}</div>}
+    </div>
     )
 }
 
 export default Layout
-
-const antigen = [
-    {
-        "title": "What is broken A antigen blood?",
-        "response": "antigen-a"
-    },
-    {
-        "title": "What is broken B antigen blood?",
-        "response": "antigen-b"
-    },
-    {
-        "title": "What is broken Rh Factor blood?",
-        "response": "antigen-rh"
-    }
-]
