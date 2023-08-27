@@ -89,12 +89,15 @@ const Layout = () => {
                 </label>
                 <input id="rhFactor" type="checkbox" checked={rhFactor} onChange={() => setRhFactor(!rhFactor)} />
             </div>
+            <p  style={{color:"#343434"}}>যদি রক্ত ভেঙ্গে না যায়, <span style={{color:"#e90b0b", fontWeight:"600"}}>পরীক্ষা করুন</span> বাটনে চাপ দিন</p>
             <div className="space"></div>
+            <div className='card-container-button'>
             {
                 isLoading ? <button onClick={calculateResult}>
                     <img src={loading} alt="loading" className='submit-load' />
                 </button> : <button onClick={calculateResult}>পরীক্ষা করুন</button>
             }
+            </div>
             {/* <button onClick={resetForm}>পুনরায়</button> */}
             {result && <div className="Result">আপনার রক্তের গ্রুপ <span>{result}</span></div>}
         </div>
